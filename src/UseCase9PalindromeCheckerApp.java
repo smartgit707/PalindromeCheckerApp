@@ -1,60 +1,66 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.LinkedList;
 
+/**
+ * =================================================================
+ * MAIN CLASS - UseCase9PalindromeCheckerApp
+ * =================================================================
+ * Use Case 8: LinkedList Based Palindrome Checker
+ * Use Case 9: Recursive Palindrome Checker
+ * Use Case 10: Normalized Palindrome Validation
+ * =================================================================
+ */
 public class UseCase9PalindromeCheckerApp {
 
     public static void main(String[] args) {
-        String input = "radar";
+        String input = "A man a plan a canal Panama";
 
-        // --- UC7: Deque Method ---
-        System.out.println("===== UC7 : Deque Method =====");
-        boolean isPalDeque = checkDeque(input);
-        System.out.println("Input : " + input + " | Palindrome: " + isPalDeque);
+        // Normalization needed for UC8, UC9, and UC10 to be logically correct
+        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        // --- UC8: LinkedList Method ---
-        System.out.println("\n===== UC8 : LinkedList Method =====");
-        boolean isPalLL = checkLinkedList(input);
-        System.out.println("Input : " + input + " | Palindrome: " + isPalLL);
-
-        // --- UC9: Recursive Method (NEW) ---
-        System.out.println("\n===== UC9 : Recursive Method =====");
-        boolean isPalRecursive = isPalindromeRecursive(input, 0, input.length() - 1);
         System.out.println("Input : " + input);
-        System.out.println("Is Palindrome? : " + isPalRecursive);
+
+        // ===============================
+        // UC8 FEATURE - LINKEDLIST METHOD
+        // ===============================
+        System.out.println("\n===== UC8 : LinkedList Method =====");
+        boolean isPalLL = checkLinkedList(normalized);
+        System.out.println("Is Palindrome (LinkedList)? : " + isPalLL);
+
+        // ===============================
+        // UC9 FEATURE - RECURSIVE METHOD
+        // ===============================
+        System.out.println("\n===== UC9 : Recursive Method =====");
+        boolean isPalRecursive = isPalindromeRecursive(normalized, 0, normalized.length() - 1);
+        System.out.println("Is Palindrome (Recursive)? : " + isPalRecursive);
+
+        // ===============================
+        // UC10 FEATURE - NORMALIZED METHOD
+        // ===============================
+        System.out.println("\n===== UC10 : Normalized Method =====");
+        boolean isPalNormalized = true;
+        for (int i = 0; i < normalized.length() / 2; i++) {
+            if (normalized.charAt(i) != normalized.charAt(normalized.length() - 1 - i)) {
+                isPalNormalized = false;
+                break;
+            }
+        }
+        System.out.println("Is Palindrome (Normalized)? : " + isPalNormalized);
     }
 
-    // UC9 Logic: Recursion
-    public static boolean isPalindromeRecursive(String str, int start, int end) {
-        // Base Case: If there's only one character or none left
-        if (start >= end) {
-            return true;
-        }
-        // Check if characters at start and end match
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-        // Recursive Call: Move inward
-        return isPalindromeRecursive(str, start + 1, end - 1);
-    }
-
-    // Existing UC8 Logic
-    public static boolean checkLinkedList(String input) {
+    // --- UC8 Logic: LinkedList ---
+    public static boolean checkLinkedList(String str) {
         LinkedList<Character> list = new LinkedList<>();
-        for (char c : input.toCharArray()) list.add(c);
+        for (char c : str.toCharArray()) list.add(c);
         while (list.size() > 1) {
             if (list.removeFirst() != list.removeLast()) return false;
         }
         return true;
     }
 
-    // Existing UC7 Logic
-    public static boolean checkDeque(String input) {
-        Deque<Character> deque = new ArrayDeque<>();
-        for (char c : input.toCharArray()) deque.addLast(c);
-        while (deque.size() > 1) {
-            if (!deque.removeFirst().equals(deque.removeLast())) return false;
-        }
-        return true;
+    // --- UC9 Logic: Recursive ---
+    public static boolean isPalindromeRecursive(String str, int start, int end) {
+        if (start >= end) return true;
+        if (str.charAt(start) != str.charAt(end)) return false;
+        return isPalindromeRecursive(str, start + 1, end - 1);
     }
 }
